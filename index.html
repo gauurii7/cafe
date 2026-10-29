@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cafe Peter — FC Road, Pune</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #080808;
+      --card:   #141414;
+      --card2:  #1c1c1c;
+      --gold:   #c9973a;
+      --gold2:  #e8c06a;
+      --gold3:  #f5d98a;
+      --white:  #ffffff;
+      --muted:  #777777;
+      --muted2: #555555;
+      --border: rgba(201,151,58,.18);
+      --bdr2:   rgba(255,255,255,.06);
+      --green:  #25d366;
+      --r:      16px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; }
+
+    /* ════════════════════════════════════════
+       HEADER
+    ════════════════════════════════════════ */
+    header {
+      background: var(--black);
+      text-align: center;
+      padding: 0 1.5rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* animated shimmer bar */
+    .hbar {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--gold3), var(--gold), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+      margin-bottom: 3.5rem;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* giant faint watermark */
+    header::before {
+      content: 'PETER';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(5rem, 18vw, 13rem);
+      font-weight: 800;
+      color: rgba(201,151,58,.035);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: 14px;
+      user-select: none;
+    }
+
+    .h-inner { position: relative; z-index: 1; }
+
+    .h-eyebrow {
+      display: inline-flex; align-items: center; gap: .7rem;
+      font-size: .65rem; font-weight: 600; letter-spacing: 4.5px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 1.4rem;
+    }
+    .h-eyebrow::before { content:''; width:36px; height:1px; background: linear-gradient(90deg,transparent,var(--gold)); }
+    .h-eyebrow::after  { content:''; width:36px; height:1px; background: linear-gradient(90deg,var(--gold),transparent); }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 10vw, 6.5rem);
+      font-weight: 800; letter-spacing: 7px;
+      color: var(--white); line-height: 1; margin-bottom: .6rem;
+    }
+    header h1 span {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold3) 50%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .h-tagline {
+      font-size: .85rem; color: rgba(255,255,255,.35);
+      letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 2rem;
+    }
+
+    .h-orn {
+      display: flex; align-items: center; justify-content: center;
+      gap: .9rem; margin-bottom: 2rem; opacity: .45;
+    }
+    .h-orn::before, .h-orn::after { content:''; width:55px; height:1px; background:var(--gold); }
+    .h-orn span { color: var(--gold); font-size: .68rem; letter-spacing: 3px; text-transform: uppercase; }
+
+    .h-pills { display: flex; justify-content: center; flex-wrap: wrap; gap: .5rem; }
+    .pill {
+      border: 1px solid var(--border); color: rgba(255,255,255,.45);
+      border-radius: 999px; padding: .3rem 1rem; font-size: .7rem;
+      letter-spacing: .5px; background: rgba(201,151,58,.03);
+    }
+
+    /* ════════════════════════════════════════
+       LAYOUT
+    ════════════════════════════════════════ */
+    .wrap {
+      max-width: 1180px; margin: 0 auto;
+      padding: 2.5rem 1.2rem 6rem;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 2rem; align-items: start;
+    }
+    @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }
+
+    .sec-title {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .sec-title h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem; color: var(--white); white-space: nowrap;
+    }
+    .sec-title::after { content:''; flex:1; height:1px; background:var(--bdr2); }
+
+    /* ════════════════════════════════════════
+       TABS
+    ════════════════════════════════════════ */
+    .tabs { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.8rem; }
+    .tab-btn {
+      background: transparent; border: 1px solid var(--bdr2);
+      color: var(--muted); border-radius: 999px;
+      padding: .42rem 1.15rem; font-size: .78rem; font-weight: 500;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      transition: all .2s; letter-spacing: .4px;
+    }
+    .tab-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .tab-btn.active { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 700; }
+
+    /* ════════════════════════════════════════
+       MENU GRID
+    ════════════════════════════════════════ */
+    .mgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.3rem;
+    }
+    .mgrid.fade { animation: fadeUp .3s ease both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ════════════════════════════════════════
+       CARD  — the star of the show
+    ════════════════════════════════════════ */
+    .card {
+      background: var(--card);
+      border-radius: var(--r);
+      border: 1px solid var(--bdr2);
+      display: flex; flex-direction: column;
+      overflow: hidden; cursor: pointer;
+      transition: transform .28s, border-color .28s, box-shadow .28s;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(201,151,58,.45);
+      box-shadow: 0 20px 56px rgba(0,0,0,.6), 0 0 0 1px rgba(201,151,58,.12);
+    }
+    /* gold shimmer line on hover */
+    .card::after {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity:0; transition:opacity .28s;
+    }
+    .card:hover::after { opacity:1; }
+
+    /* ── photo area ── */
+    .cimg {
+      position: relative; height: 185px; overflow: hidden;
+      background: var(--card2);
+    }
+    .cimg img {
+      width:100%; height:100%; object-fit:cover; display:block;
+      transition: transform .45s ease;
+    }
+    .card:hover .cimg img { transform: scale(1.08); }
+    .cimg .fallback {
+      position:absolute; inset:0;
+      display:none; align-items:center; justify-content:center;
+      font-size:3.2rem;
+    }
+    /* bottom gradient so text over image is readable */
+    .cimg::after {
+      content:''; position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,.7) 0%, rgba(0,0,0,.1) 50%, transparent 100%);
+      pointer-events:none;
+    }
+
+    /* badge */
+    .badge {
+      position:absolute; top:11px; left:11px; z-index:2;
+      font-size:.58rem; font-weight:700; letter-spacing:.9px;
+      text-transform:uppercase; border-radius:999px;
+      padding:.22rem .6rem; line-height:1.5; backdrop-filter:blur(4px);
+    }
+    .bp { background:rgba(201,151,58,.92); color:#000; }
+    .bc { background:rgba(124,58,237,.9);  color:#fff; }
+    .bn { background:rgba(14,165,233,.9);  color:#fff; }
+
+    /* veg/non-veg dot */
+    .vdot {
+      position:absolute; top:11px; right:11px; z-index:2;
+      width:15px; height:15px; border-radius:3px;
+      border:1.5px solid currentColor;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.5); backdrop-filter:blur(4px);
+    }
+    .vdot::after { content:''; width:7px; height:7px; border-radius:50%; background:currentColor; }
+    .vdot.v  { color:#4caf50; }
+    .vdot.nv { color:#ef5350; }
+
+    /* price pinned to bottom of image */
+    .cimg-price {
+      position:absolute; bottom:10px; right:11px; z-index:2;
+      font-family:'Playfair Display', serif;
+      font-size:1.1rem; font-weight:700;
+      color:var(--gold3);
+      text-shadow: 0 1px 6px rgba(0,0,0,.8);
+    }
+
+    /* ── card body ── */
+    .cbody {
+      padding: 1rem 1.1rem .85rem;
+      flex:1; display:flex; flex-direction:column; gap:.3rem;
+    }
+    .cbody h3 {
+      font-size:1rem; font-weight:700;
+      color:var(--white); line-height:1.3;
+      font-family:'Playfair Display', serif;
+    }
+    .cbody .cdesc {
+      font-size:.78rem; color:var(--muted); line-height:1.55;
+    }
+    .cbody .cing {
+      font-size:.68rem; color:rgba(201,151,58,.45);
+      font-style:italic; margin-top:.1rem;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+
+    /* spice */
+    .spice { display:flex; align-items:center; gap:.3rem; margin-top:.3rem; }
+    .spice-lbl { font-size:.65rem; color:var(--muted2); }
+    .ch { font-size:.72rem; opacity:.2; }
+    .ch.on { opacity:1; }
+
+    /* ── card footer ── */
+    .cfoot {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:.75rem 1.1rem;
+      border-top:1px solid var(--bdr2);
+      background: rgba(255,255,255,.015);
+    }
+    .ctag {
+      font-size:.65rem; color:var(--muted2);
+      display:flex; align-items:center; gap:.3rem;
+    }
+    .ctag .vmark { font-size:.7rem; }
+
+    .add-btn {
+      background: transparent; color:var(--gold);
+      border:1px solid var(--border);
+      border-radius:999px; padding:.38rem 1.05rem;
+      font-size:.75rem; font-weight:600;
+      font-family:'Inter', sans-serif; cursor:pointer;
+      letter-spacing:.5px; transition:all .2s; min-width:74px; text-align:center;
+    }
+    .add-btn:hover { background:var(--gold); color:var(--black); border-color:var(--gold); }
+    .add-btn.added { background:#22c55e; color:#fff; border-color:#22c55e; }
+
+    /* ════════════════════════════════════════
+       CART
+    ════════════════════════════════════════ */
+    .cart-box {
+      background:var(--card); border-radius:var(--r);
+      border:1px solid var(--bdr2); padding:1.5rem;
+      position:sticky; top:1.2rem;
+    }
+    .cart-head {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:1.2rem; padding-bottom:1rem; border-bottom:1px solid var(--bdr2);
+    }
+    .cart-head h2 {
+      font-family:'Playfair Display', serif;
+      font-size:1.2rem; color:var(--white);
+    }
+    .ccnt {
+      background:var(--gold); color:var(--black);
+      font-size:.68rem; font-weight:700;
+      border-radius:999px; padding:.15rem .6rem; display:none;
+    }
+    .ccnt.show { display:inline-block; }
+
+    #citems { list-style:none; display:flex; flex-direction:column; gap:.85rem; }
+    #citems li { display:grid; grid-template-columns:1fr auto; gap:.2rem .5rem; align-items:center; }
+    .crow { animation: cpop .3s cubic-bezier(.34,1.56,.64,1) both; }
+    @keyframes cpop { from{opacity:0;transform:scale(.85) translateX(10px)} to{opacity:1;transform:scale(1) translateX(0)} }
+
+    .iname  { font-size:.84rem; font-weight:600; color:var(--white); }
+    .iprice { font-size:.84rem; font-weight:700; color:var(--gold); text-align:right; }
+    .qrow   { display:flex; align-items:center; gap:.35rem; }
+    .qbtn {
+      width:26px; height:26px; border-radius:50%;
+      border:1px solid var(--border); background:transparent;
+      color:var(--gold); font-size:.95rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; transition:all .15s;
+    }
+    .qbtn:hover { background:var(--gold); color:var(--black); border-color:var(--gold); }
+    .qnum { min-width:20px; text-align:center; font-weight:700; font-size:.85rem; color:var(--white); }
+
+    .cempty { text-align:center; padding:1.8rem 0; color:var(--muted); font-size:.83rem; line-height:1.7; }
+    .cempty span { display:block; font-size:2rem; margin-bottom:.5rem; opacity:.3; }
+    .cdiv { border:none; border-top:1px solid var(--bdr2); margin:1.1rem 0; }
+    .ctotal { display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:.95rem; color:rgba(255,255,255,.55); }
+    .tamt { font-size:1.2rem; color:var(--gold); }
+
+    .wa-btn {
+      display:flex; align-items:center; justify-content:center; gap:.5rem;
+      width:100%; margin-top:1.1rem; padding:.9rem;
+      background:var(--green); color:#fff; border:none; border-radius:var(--r);
+      font-size:.9rem; font-weight:700; font-family:'Inter', sans-serif;
+      cursor:pointer; letter-spacing:.3px; transition:opacity .2s, transform .15s;
+    }
+    .wa-btn:hover:not(:disabled) { opacity:.88; transform:translateY(-2px); }
+    .wa-btn:disabled { opacity:.22; cursor:not-allowed; }
+
+    /* ════════════════════════════════════════
+       MODAL
+    ════════════════════════════════════════ */
+    .moverlay {
+      display:none; position:fixed; inset:0; z-index:200;
+      background:rgba(0,0,0,.88); backdrop-filter:blur(8px);
+      align-items:center; justify-content:center; padding:1rem;
+    }
+    .moverlay.open { display:flex; animation:oin .2s ease both; }
+    @keyframes oin { from{opacity:0} to{opacity:1} }
+
+    .modal {
+      background:var(--card); border:1px solid rgba(201,151,58,.28);
+      border-radius:20px; width:100%; max-width:500px;
+      box-shadow:0 40px 100px rgba(0,0,0,.8);
+      overflow:hidden; animation:min .32s cubic-bezier(.34,1.56,.64,1) both;
+      max-height:90vh; overflow-y:auto;
+    }
+    @keyframes min { from{opacity:0;transform:scale(.88) translateY(24px)} to{opacity:1;transform:scale(1) translateY(0)} }
+
+    .mthumb {
+      position:relative; height:240px; overflow:hidden; background:var(--card2);
+    }
+    .mthumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .mthumb .mfallback {
+      position:absolute; inset:0; display:none;
+      align-items:center; justify-content:center; font-size:5rem;
+    }
+    .mthumb::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,.75) 0%, transparent 55%);
+      pointer-events:none;
+    }
+    .mclose {
+      position:absolute; top:14px; right:14px; z-index:3;
+      width:34px; height:34px; border-radius:50%;
+      background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.12);
+      color:rgba(255,255,255,.7); font-size:1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; transition:all .15s;
+    }
+    .mclose:hover { background:rgba(255,255,255,.15); color:#fff; }
+    .mbadge-row { position:absolute; top:14px; left:14px; z-index:3; display:flex; gap:.4rem; }
+
+    /* price pinned bottom-right of modal image */
+    .mimg-price {
+      position:absolute; bottom:14px; right:14px; z-index:3;
+      font-family:'Playfair Display', serif;
+      font-size:1.6rem; font-weight:700; color:var(--gold3);
+      text-shadow:0 2px 8px rgba(0,0,0,.9);
+    }
+
+    .mbody { padding:1.5rem 1.6rem 2rem; }
+    .mbody h2 {
+      font-family:'Playfair Display', serif;
+      font-size:1.55rem; color:var(--white); margin-bottom:.5rem;
+    }
+    .mdesc { font-size:.88rem; color:var(--muted); line-height:1.65; margin-bottom:1rem; }
+
+    .mmeta { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1rem; }
+    .mtag {
+      font-size:.7rem; font-weight:600; letter-spacing:.5px;
+      border-radius:999px; padding:.25rem .8rem;
+      border:1px solid var(--bdr2); color:var(--muted);
+    }
+    .mtag.vt  { border-color:rgba(76,175,80,.4);  color:#4caf50; }
+    .mtag.nvt { border-color:rgba(239,83,80,.4);  color:#ef5350; }
+
+    .ming-lbl { font-size:.68rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--gold); margin-bottom:.4rem; }
+    .ming { font-size:.82rem; color:var(--muted); line-height:1.65; margin-bottom:1.2rem; }
+
+    .mspice { display:flex; align-items:center; gap:.5rem; margin-bottom:1.5rem; }
+    .mspice-lbl { font-size:.73rem; color:var(--muted); }
+
+    .mfoot { display:flex; align-items:center; justify-content:flex-end; }
+    .madd-btn {
+      background:var(--gold); color:var(--black); border:none;
+      border-radius:999px; padding:.75rem 2rem;
+      font-size:.92rem; font-weight:700; font-family:'Inter', sans-serif;
+      cursor:pointer; letter-spacing:.4px; transition:opacity .2s, transform .15s;
+    }
+    .madd-btn:hover { opacity:.88; transform:scale(1.04); }
+
+    /* ════════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════════ */
+    footer {
+      text-align:center; padding:2rem 1rem;
+      font-size:.72rem; color:rgba(255,255,255,.18);
+      border-top:1px solid var(--bdr2); letter-spacing:1.2px; text-transform:uppercase;
+    }
+    footer strong { color:var(--gold); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <div class="hbar"></div>
+  <div class="h-inner">
+    <div class="h-eyebrow">Est. 2024 · FC Road, Pune</div>
+    <h1>CAFE <span>PETER</span></h1>
+    <p class="h-tagline">Where Every Bite Tells a Story</p>
+    <div class="h-orn"><span>✦ &nbsp; Fine Food &amp; Coffee &nbsp; ✦</span></div>
+    <div class="h-pills">
+      <span class="pill">🕐 9 AM – 11 PM</span>
+      <span class="pill">🛵 Home Delivery</span>
+      <span class="pill">📍 FC Road, Pune</span>
+      <span class="pill">☕ Dine In</span>
+      <span class="pill">🍷 All Day Brunch</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ MAIN ══════════ -->
+<div class="wrap">
+  <section>
+    <div class="sec-title"><h2>Our Menu</h2></div>
+    <div class="tabs" id="tabs"></div>
+    <div class="mgrid" id="mgrid"></div>
+  </section>
+
+  <aside class="cart-box">
+    <div class="cart-head">
+      <h2>Your Order</h2>
+      <span class="ccnt" id="ccnt">0</span>
+    </div>
+    <ul id="citems">
+      <li class="cempty" id="cempty">
+        <span>🛒</span>
+        Your cart is empty.<br/>Add something delicious!
+      </li>
+    </ul>
+    <hr class="cdiv"/>
+    <div class="ctotal">
+      <span>Total</span>
+      <span class="tamt" id="ctotal">₹0</span>
+    </div>
+    <!--
+      WHATSAPP ORDER BUTTON
+      Number: +91 90753 65988 → 919075365988
+      To change: update WHATSAPP_NUMBER in the script.
+      NOTE: Opens WhatsApp with a pre-filled message.
+      The customer must press Send themselves.
+      This website does NOT send the message automatically.
+    -->
+    <button class="wa-btn" id="wabtn" disabled onclick="placeOrder()">
+      📲 &nbsp; Place Order on WhatsApp
+    </button>
+  </aside>
+</div>
+
+<footer>© 2025 &nbsp;<strong>Cafe Peter</strong>&nbsp; · FC Road, Pune · All Rights Reserved</footer>
+
+<!-- ══════════ MODAL ══════════ -->
+<div class="moverlay" id="moverlay" onclick="closeMO(event)">
+  <div class="modal">
+    <div class="mthumb">
+      <div class="mbadge-row" id="mbadges"></div>
+      <img id="mimg" src="" alt=""/>
+      <span class="mfallback" id="mfallback"></span>
+      <button class="mclose" onclick="closeM()">✕</button>
+      <span class="mimg-price" id="mprice"></span>
+    </div>
+    <div class="mbody">
+      <h2 id="mname"></h2>
+      <p class="mdesc" id="mdesc"></p>
+      <div class="mmeta" id="mmeta"></div>
+      <p class="ming-lbl">Ingredients</p>
+      <p class="ming" id="ming"></p>
+      <div class="mspice" id="mspice"></div>
+      <div class="mfoot">
+        <button class="madd-btn" id="madd">+ Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const WHATSAPP_NUMBER = "919075365988";
+
+const menu = [
+  { category:"Appetizers", emoji:"🥗", items:[
+    { name:"BBQ Nachos",            emoji:"🌽", price:199, veg:true,  badge:"popular", spice:1, img:"https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=600&q=80", desc:"Crispy tortilla chips loaded with BBQ sauce, jalapeños, sour cream & melted cheese.", ing:"Tortilla chips, BBQ sauce, cheddar, jalapeños, sour cream, spring onion" },
+    { name:"Loaded Fries",          emoji:"🍟", price:179, veg:true,  badge:null,      spice:1, img:"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&q=80", desc:"Thick-cut fries smothered in cheese sauce, chilli flakes and fresh herbs.", ing:"Potato fries, cheese sauce, chilli flakes, parsley, paprika" },
+    { name:"Chicken Wings (6 pcs)", emoji:"🍗", price:249, veg:false, badge:"popular", spice:2, img:"https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&q=80", desc:"Crispy wings tossed in smoky BBQ or fiery buffalo sauce with a blue cheese dip.", ing:"Chicken wings, BBQ/buffalo sauce, garlic butter, celery" },
+    { name:"Bruschetta Trio",       emoji:"🍞", price:159, veg:true,  badge:"new",     spice:0, img:"https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&q=80", desc:"Three toasted sourdough slices — classic tomato, avocado & wild mushroom.", ing:"Sourdough, tomato, avocado, mushroom, olive oil, basil" },
+    { name:"Spinach Artichoke Dip", emoji:"🥬", price:189, veg:true,  badge:null,      spice:0, img:"https://images.unsplash.com/photo-1576506295286-5cda18df43e7?w=600&q=80", desc:"Warm creamy dip served with toasted pita triangles and tortilla chips.", ing:"Spinach, artichoke, cream cheese, parmesan, garlic, pita" }
+  ]},
+  { category:"Starters", emoji:"🍢", items:[
+    { name:"Paneer Tikka",             emoji:"🧀", price:229, veg:true,  badge:"popular", spice:2, img:"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=600&q=80", desc:"Char-grilled paneer cubes marinated in smoky tikka spices, served with mint chutney.", ing:"Paneer, capsicum, onion, tikka masala, yoghurt, chaat masala" },
+    { name:"Chicken Tikka",            emoji:"🍗", price:269, veg:false, badge:"chef",    spice:2, img:"https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80", desc:"Juicy chicken pieces marinated overnight in aromatic spices, grilled to perfection.", ing:"Chicken, yoghurt, tikka masala, lemon, ginger-garlic paste" },
+    { name:"Crispy Calamari",          emoji:"🦑", price:299, veg:false, badge:null,      spice:0, img:"https://images.unsplash.com/photo-1604909052743-94e838986d24?w=600&q=80", desc:"Golden fried squid rings served with lemon aioli and marinara sauce.", ing:"Squid, seasoned flour, lemon aioli, marinara sauce, parsley" },
+    { name:"Mushroom Crostini",        emoji:"🍄", price:169, veg:true,  badge:"new",     spice:0, img:"https://images.unsplash.com/photo-1506280754576-f6fa8a873550?w=600&q=80", desc:"Sautéed garlic mushrooms on toasted baguette finished with truffle oil.", ing:"Mushrooms, baguette, garlic, truffle oil, thyme, parmesan" },
+    { name:"Chicken Lollipop (6 pcs)", emoji:"🍗", price:249, veg:false, badge:null,      spice:3, img:"https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=600&q=80", desc:"Spicy fried chicken lollipops with a sriracha mayo dipping sauce.", ing:"Chicken wings, red chilli, ginger-garlic, cornflour, sriracha" }
+  ]},
+  { category:"Main Course", emoji:"🍽️", items:[
+    { name:"Butter Chicken",        emoji:"🍛", price:319, veg:false, badge:"popular", spice:1, img:"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80", desc:"Tender chicken in a rich, velvety tomato-butter-cream gravy. A timeless classic.", ing:"Chicken, butter, tomato, cream, kasuri methi, garam masala" },
+    { name:"Paneer Butter Masala",  emoji:"🧀", price:289, veg:true,  badge:"popular", spice:1, img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&q=80", desc:"Soft paneer cubes in a silky makhani gravy — comfort food at its finest.", ing:"Paneer, tomato, butter, cream, cashew paste, spices" },
+    { name:"Chicken Biryani",       emoji:"🍚", price:349, veg:false, badge:"chef",    spice:2, img:"https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&q=80", desc:"Dum-cooked aromatic biryani with saffron, fried onions and cooling raita.", ing:"Basmati rice, chicken, biryani masala, saffron, fried onion" },
+    { name:"Grilled Chicken Steak", emoji:"🥩", price:379, veg:false, badge:"chef",    spice:0, img:"https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=600&q=80", desc:"Herb-marinated chicken breast, grilled and served with mashed potato & mushroom sauce.", ing:"Chicken breast, herbs, garlic butter, mashed potato, mushroom sauce" },
+    { name:"Dal Makhani",           emoji:"🫘", price:229, veg:true,  badge:null,      spice:1, img:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&q=80", desc:"Slow-cooked black dal simmered overnight with butter and cream.", ing:"Black dal, rajma, butter, cream, tomato, spices" }
+  ]},
+  { category:"Burgers", emoji:"🍔", items:[
+    { name:"Smash Burger",          emoji:"🍔", price:299, veg:false, badge:"popular", spice:1, img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80", desc:"Double smashed beef patty, American cheese, pickles and special sauce in a brioche bun.", ing:"Beef patty, American cheese, pickles, lettuce, special sauce, brioche" },
+    { name:"Crispy Chicken Burger", emoji:"🍔", price:279, veg:false, badge:null,      spice:2, img:"https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&q=80", desc:"Buttermilk fried chicken with house coleslaw and sriracha mayo.", ing:"Chicken thigh, buttermilk batter, coleslaw, sriracha mayo, brioche" },
+    { name:"Black Bean Burger",     emoji:"🍔", price:249, veg:true,  badge:"new",     spice:1, img:"https://images.unsplash.com/photo-1520072959219-c595dc870360?w=600&q=80", desc:"Smoky black bean patty with avocado, lettuce and chipotle sauce.", ing:"Black bean patty, avocado, lettuce, tomato, chipotle sauce, brioche" },
+    { name:"BBQ Bacon Burger",      emoji:"🍔", price:329, veg:false, badge:"chef",    spice:1, img:"https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&q=80", desc:"Beef patty, crispy bacon, BBQ sauce, cheddar and caramelised onions.", ing:"Beef patty, bacon, cheddar, BBQ sauce, caramelised onion, brioche" },
+    { name:"Paneer Tikka Burger",   emoji:"🍔", price:259, veg:true,  badge:null,      spice:2, img:"https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=600&q=80", desc:"Grilled tikka paneer patty with mint chutney and pickled onions.", ing:"Paneer patty, tikka spices, mint chutney, pickled onion, brioche" }
+  ]},
+  { category:"Pizzas", emoji:"🍕", items:[
+    { name:"Truffle Mushroom",    emoji:"🍕", price:349, veg:true,  badge:"chef",    spice:0, img:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80", desc:"White truffle base, wild mushrooms, fresh mozzarella and thyme.", ing:"Pizza base, truffle oil, wild mushrooms, mozzarella, thyme, parmesan" },
+    { name:"Chicken Tikka Pizza", emoji:"🍕", price:369, veg:false, badge:"popular", spice:2, img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80", desc:"Tikka-spiced chicken, mozzarella, red onion and coriander chutney base.", ing:"Pizza base, chicken tikka, red onion, mozzarella, coriander chutney" },
+    { name:"BBQ Chicken Pizza",   emoji:"🍕", price:359, veg:false, badge:null,      spice:1, img:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80", desc:"Smoky BBQ base, grilled chicken, caramelised onions and mozzarella.", ing:"Pizza base, BBQ sauce, chicken, caramelised onion, mozzarella" },
+    { name:"Margherita",          emoji:"🍕", price:249, veg:true,  badge:null,      spice:0, img:"https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=600&q=80", desc:"San Marzano tomato sauce, fresh mozzarella and hand-torn basil.", ing:"Pizza base, San Marzano tomato, fresh mozzarella, basil, olive oil" },
+    { name:"Four Cheese",         emoji:"🍕", price:379, veg:true,  badge:"chef",    spice:0, img:"https://images.unsplash.com/photo-1548369937-47519962c11a?w=600&q=80", desc:"Mozzarella, cheddar, gorgonzola and parmesan — rich and indulgent.", ing:"Pizza base, mozzarella, cheddar, gorgonzola, parmesan, honey drizzle" }
+  ]},
+  { category:"Pastas", emoji:"🍝", items:[
+    { name:"Truffle Alfredo",   emoji:"🍝", price:299, veg:true,  badge:"chef",    spice:0, img:"https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=600&q=80", desc:"Fettuccine in a rich truffle-parmesan cream sauce.", ing:"Fettuccine, truffle oil, cream, parmesan, garlic, butter" },
+    { name:"Chicken Pesto",     emoji:"🍝", price:319, veg:false, badge:null,      spice:0, img:"https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600&q=80", desc:"Grilled chicken with fresh basil pesto, pine nuts and cherry tomatoes.", ing:"Penne, chicken, basil pesto, pine nuts, cherry tomato, parmesan" },
+    { name:"Arrabbiata",        emoji:"🍝", price:229, veg:true,  badge:null,      spice:3, img:"https://images.unsplash.com/photo-1608219992759-8d74ed8d76eb?w=600&q=80", desc:"Spicy San Marzano tomato sauce with garlic and fresh chilli.", ing:"Penne, San Marzano tomato, garlic, red chilli, parsley, olive oil" },
+    { name:"Pink Sauce Pasta",  emoji:"🍝", price:269, veg:true,  badge:"popular", spice:1, img:"https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80", desc:"Café signature — silky blend of tomato and cream sauce with herbs.", ing:"Penne, tomato, cream, cheese, basil, butter, garlic" },
+    { name:"Seafood Linguine",  emoji:"🦐", price:399, veg:false, badge:"new",     spice:1, img:"https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80", desc:"Prawns and mussels in a white wine garlic butter sauce.", ing:"Linguine, prawns, mussels, white wine, garlic, butter, parsley" }
+  ]},
+  { category:"Drinks", emoji:"🥤", items:[
+    { name:"Signature Cold Coffee",  emoji:"☕", price:149, veg:true, badge:"popular", spice:0, img:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80", desc:"House blend cold coffee — thick, creamy and topped with cold foam.", ing:"Espresso, milk, sugar, cold foam, chocolate drizzle, ice" },
+    { name:"Mango Passion Smoothie", emoji:"🥭", price:169, veg:true, badge:null,      spice:0, img:"https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600&q=80", desc:"Alphonso mango blended with passion fruit and yoghurt.", ing:"Alphonso mango, passion fruit, yoghurt, honey, ice" },
+    { name:"Watermelon Mint Cooler", emoji:"🍉", price:129, veg:true, badge:"new",     spice:0, img:"https://images.unsplash.com/photo-1497534446932-c925b458314e?w=600&q=80", desc:"Fresh watermelon juice with mint, lime and a pinch of black salt.", ing:"Watermelon, mint, lime, black salt, sugar, ice" },
+    { name:"Iced Caramel Latte",     emoji:"🧋", price:159, veg:true, badge:null,      spice:0, img:"https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&q=80", desc:"Double espresso over ice with caramel syrup and oat milk.", ing:"Espresso, oat milk, caramel syrup, ice" },
+    { name:"Virgin Mojito",          emoji:"🍃", price:139, veg:true, badge:null,      spice:0, img:"https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80", desc:"Classic mint-lime mojito — refreshing and perfectly balanced.", ing:"Lime, mint, sugar syrup, soda water, ice" }
+  ]},
+  { category:"Desserts", emoji:"🍮", items:[
+    { name:"Chocolate Lava Cake",  emoji:"🍫", price:179, veg:true, badge:"popular", spice:0, img:"https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&q=80", desc:"Warm dark chocolate cake with a molten centre, served with vanilla ice cream.", ing:"Dark chocolate, butter, eggs, flour, sugar, vanilla ice cream" },
+    { name:"New York Cheesecake",  emoji:"🍰", price:169, veg:true, badge:null,      spice:0, img:"https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&q=80", desc:"Classic baked cheesecake with a buttery biscuit base and berry compote.", ing:"Cream cheese, biscuit base, eggs, sugar, vanilla, berry compote" },
+    { name:"Tiramisu",             emoji:"🍮", price:159, veg:true, badge:"chef",    spice:0, img:"https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&q=80", desc:"Authentic Italian tiramisu with espresso-soaked ladyfingers and mascarpone.", ing:"Mascarpone, ladyfingers, espresso, cocoa powder, eggs, sugar" },
+    { name:"Kulfi Falooda",        emoji:"🍨", price:149, veg:true, badge:null,      spice:0, img:"https://images.unsplash.com/photo-1488477181228-c2b5e2c7b5e3?w=600&q=80", desc:"Creamy pistachio kulfi with falooda sev, rose syrup and basil seeds.", ing:"Kulfi, falooda sev, rose syrup, basil seeds, milk, pistachio" },
+    { name:"Crème Brûlée",         emoji:"🍯", price:189, veg:true, badge:"new",     spice:0, img:"https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=600&q=80", desc:"Silky vanilla custard with a perfectly caramelised sugar crust.", ing:"Cream, egg yolks, sugar, vanilla bean, caramelised sugar top" }
+  ]}
+];
+
+const cart = {};
+
+/* ── helpers ── */
+function spiceHTML(l) {
+  if (!l) return '';
+  const lbl = ['','Mild','Medium','Hot'];
+  let s = '';
+  for (let i=1;i<=3;i++) s += `<span class="ch ${i<=l?'on':''}">🌶️</span>`;
+  return `<div class="spice">${s}<span class="spice-lbl">${lbl[l]}</span></div>`;
+}
+function badgeHTML(b) {
+  if (!b) return '';
+  const m = { popular:['bp','⭐ Popular'], chef:['bc',"👨‍🍳 Chef's Special"], new:['bn','✨ New'] };
+  return `<span class="badge ${m[b][0]}">${m[b][1]}</span>`;
+}
+
+/* ── tabs ── */
+function buildTabs() {
+  const el = document.getElementById('tabs');
+  menu.forEach((cat,i) => {
+    const b = document.createElement('button');
+    b.className = 'tab-btn' + (i===0?' active':'');
+    b.textContent = cat.emoji + '  ' + cat.category;
+    b.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      buildGrid(i);
+    };
+    el.appendChild(b);
+  });
+}
+
+/* ── grid ── */
+function buildGrid(i) {
+  const g = document.getElementById('mgrid');
+  g.innerHTML = '';
+  g.classList.remove('fade'); void g.offsetWidth; g.classList.add('fade');
+
+  menu[i].items.forEach((item, idx) => {
+    const c = document.createElement('div');
+    c.className = 'card';
+    c.innerHTML = `
+      <div class="cimg">
+        ${badgeHTML(item.badge)}
+        <img src="${item.img}" alt="${item.name}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <span class="fallback">${item.emoji}</span>
+        <span class="vdot ${item.veg?'v':'nv'}"></span>
+        <span class="cimg-price">₹${item.price}</span>
+      </div>
+      <div class="cbody">
+        <h3>${item.name}</h3>
+        <p class="cdesc">${item.desc}</p>
+        <p class="cing">✦ ${item.ing}</p>
+        ${spiceHTML(item.spice)}
+      </div>
+      <div class="cfoot">
+        <span class="ctag">
+          <span class="vmark">${item.veg?'🟢':'🔴'}</span>
+          ${item.veg?'Veg':'Non-Veg'}
+        </span>
+        <button class="add-btn" id="ab-${i}-${idx}"
+          onclick="event.stopPropagation();addFB('${item.name.replace(/'/g,"\\'")}',${item.price},'ab-${i}-${idx}')">
+          + Add
+        </button>
+      </div>`;
+    c.onclick = () => openM(item);
+    g.appendChild(c);
+  });
+}
+
+/* ── cart ── */
+function addToCart(name, price) {
+  cart[name] ? cart[name].qty++ : (cart[name] = {price, qty:1});
+  renderCart();
+}
+function addFB(name, price, id) {
+  addToCart(name, price);
+  const b = document.getElementById(id);
+  if (!b) return;
+  b.textContent = 'Added ✓'; b.classList.add('added');
+  setTimeout(() => { b.textContent = '+ Add'; b.classList.remove('added'); }, 1200);
+}
+function chQty(name, d) {
+  if (!cart[name]) return;
+  cart[name].qty += d;
+  if (cart[name].qty <= 0) delete cart[name];
+  renderCart();
+}
+function renderCart() {
+  const list = document.getElementById('citems');
+  const tEl  = document.getElementById('ctotal');
+  const wa   = document.getElementById('wabtn');
+  const emp  = document.getElementById('cempty');
+  const cnt  = document.getElementById('ccnt');
+  const keys = Object.keys(cart);
+
+  emp.style.display = keys.length ? 'none' : 'list-item';
+  list.querySelectorAll('.crow').forEach(e=>e.remove());
+
+  let total=0, tq=0;
+  keys.forEach(name => {
+    const {price,qty} = cart[name];
+    total += price*qty; tq += qty;
+    const li = document.createElement('li');
+    li.className = 'crow';
+    li.innerHTML = `
+      <span class="iname">${name}</span>
+      <span class="iprice">₹${price*qty}</span>
+      <div class="qrow">
+        <button class="qbtn" onclick="chQty('${name.replace(/'/g,"\\'")}', -1)">−</button>
+        <span class="qnum">${qty}</span>
+        <button class="qbtn" onclick="chQty('${name.replace(/'/g,"\\'")}', +1)">+</button>
+      </div><span></span>`;
+    list.appendChild(li);
+  });
+  tEl.textContent = '₹'+total;
+  cnt.textContent = tq;
+  cnt.classList.toggle('show', tq>0);
+  wa.disabled = keys.length===0;
+}
+
+/* ── modal ── */
+function openM(item) {
+  const img = document.getElementById('mimg');
+  const fb  = document.getElementById('mfallback');
+  img.src = item.img; img.alt = item.name;
+  img.style.display = 'block'; fb.style.display = 'none';
+  img.onerror = () => { img.style.display='none'; fb.style.display='flex'; fb.textContent=item.emoji; };
+
+  document.getElementById('mname').textContent  = item.name;
+  document.getElementById('mdesc').textContent  = item.desc;
+  document.getElementById('ming').textContent   = item.ing;
+  document.getElementById('mprice').textContent = '₹'+item.price;
+  document.getElementById('mbadges').innerHTML  = badgeHTML(item.badge);
+  document.getElementById('mmeta').innerHTML    =
+    `<span class="mtag ${item.veg?'vt':'nvt'}">${item.veg?'🟢 Veg':'🔴 Non-Veg'}</span>`;
+  document.getElementById('mspice').innerHTML   =
+    item.spice>0
+      ? `<span class="mspice-lbl">Spice Level:</span>${spiceHTML(item.spice)}`
+      : `<span class="mspice-lbl" style="color:var(--muted2)">No spice</span>`;
+
+  const ab = document.getElementById('madd');
+  ab.textContent = '+ Add to Cart'; ab.style.background = '';
+  ab.onclick = () => {
+    addToCart(item.name, item.price);
+    ab.textContent = 'Added ✓'; ab.style.background = '#22c55e';
+    setTimeout(() => { ab.textContent = '+ Add to Cart'; ab.style.background = ''; }, 1200);
+  };
+  document.getElementById('moverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMO(e) { if (e.target===document.getElementById('moverlay')) closeM(); }
+function closeM() {
+  document.getElementById('moverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeM(); });
+
+/* ── WhatsApp order ──
+   Opens WhatsApp with a pre-filled message.
+   The customer must press Send themselves.
+   This website does NOT send the message automatically. */
+function placeOrder() {
+  const keys = Object.keys(cart);
+  if (!keys.length) return;
+  let msg = '🍽️ *Order — Cafe Peter, FC Road Pune*\n\n', total = 0;
+  keys.forEach(name => {
+    const {price,qty} = cart[name];
+    total += price*qty;
+    msg += `• ${name}  ×${qty}  —  ₹${price*qty}\n`;
+  });
+  msg += `\n*Total: ₹${total}*\n\nKindly confirm my order. Thank you! 🙏`;
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+buildTabs();
+buildGrid(0);
+</script>
+</body>
+</html>
